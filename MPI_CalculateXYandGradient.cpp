@@ -69,7 +69,7 @@ int main(){
             y_vec.push_back(y);
             
         }
-    
+        //each node finds gradient for its set of x/y values
         for (int i=(rank-1)*x_vec.size()/numNodes+5; i<x_vec.size()/numNodes; i++){
             j = i-5;
             z = 1/1000000; 
@@ -80,7 +80,7 @@ int main(){
             g_vec[j] = g*1000000 + time_in_ms*1000 + probe_ID; //adds back the time and height information to the gradient value 
         
         }
-        
+        //each processor sends vector of gradients to head node
         MPI_Send(g_vec, x_vec.size(), MPI_INT, 0, rank, MPI_COMM_WORLD);
     }
     
