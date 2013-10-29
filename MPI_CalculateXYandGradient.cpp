@@ -9,7 +9,6 @@
 #include "mpi.h"
 using namespace std;
 
-
 class XX{
 public:
     XX(){}
