@@ -90,7 +90,7 @@ int main(){
           MPI_Recv(g_Vec, x_vec.size(), MPI_INT, i, i, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
           FullGradient.pushback(g_Vec);
         }
-        //we don't need to worry about the order within this vector, 
+        //we don't need to worry about the order within this vector
         //because part of each value holds the probe height and the time
 
 
