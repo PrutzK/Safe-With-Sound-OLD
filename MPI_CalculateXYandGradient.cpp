@@ -76,7 +76,7 @@ int main(){
                 (y_vec[i-5]*z + y_vec[i-4]*z + y_vec[i-3]*z + y_vec[i-2]*z + y_vec[i-1]*z + y_vec[i]*z)/5;
             g *= -255;
             g = (g+225)/1; //force integer division
-            g_vec[j] = g*1000000 + time_in_ms*1000 + probe_ID; //adds back the time and height information to the gradient value 
+            g_vec[j] = g*1000000 + time_in_ms*1000 + probe_ID; //adds back the time and height to the gradient value 
         
         }
         //each processor sends vector of gradients to head node
