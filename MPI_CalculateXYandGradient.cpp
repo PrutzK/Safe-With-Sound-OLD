@@ -1,5 +1,5 @@
 // MPI CODE 
-//For after you've gotten you distance data stored as   (distance_in_cm*1,000,000 + time_in_ms*1,000 + probe_ID)
+//For after you've gotten you distance data stored as (distance_in_cm*1,000,000 + time_in_ms*1,000 + probe_ID)
 //This collapse all needed data into a single number to fit into a 1D array - supercomputers like 1D arrays
 
 #include <iostream>
