@@ -8,7 +8,6 @@
 #include <vector>
 #include <time.h>
 #include "mpi.h"
-
 using namespace std;
 
 class XX{
