@@ -1,0 +1,29 @@
+//To test your connection between your computer and the microcrontroller, try first the code to test a flashing LED
+do 
+	high B.1	; switch on output B.1 
+	pause 1000  ; wait 1 second 
+	low B.1	 ; switch off output B.1 
+	pause 1000  ; wait 1 second 
+loop	              ; loop back to start 
+
+
+//if you are unable to connect your firmware to macaxepad, try rigging a programming cable from slots 1,3,4 in a DB-9 cable (http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&ved=0CDYQtwIwAQ&url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DS9qDlbsDhNs&ei=JmqfUreVFMb1rAGHloD4CQ&usg=AFQjCNHOGorOtCG4F-s-2SaZuTiQI0q6iQ&sig2=xxkJgXYQGKsTYzBA9OTSGQ&bvm=bv.57155469,d.aWM)
+//If this still does not work, try buying picaxe's programming cable online with the connector piece to a breadboard
+//NO project board is needed
+
+
+
+
+//Test #2: try out one probe 
+symbol trig = C.2 ' trigger oulse at output pin, #11
+symbol echo = C.3 'echo pulse at input pin, #12
+symbol distance = w1  '16 bit word variable for distance
+
+main:
+pulsout trig,2 ' produce 20uS trigger pulse - 10uS minimum
+pulsin echo,1,distance 'measure the range in 10uS steps
+pause 10 'recharge period after ranging completes 
+'now convert range to cm (10/58) or in (10/148)  - picaxe can't divide by decimal
+let distance = distance * 10 /58 'cm  
+debug distance 'display distnace via debug command
+goto main 'loops forever
