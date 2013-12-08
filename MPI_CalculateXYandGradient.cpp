@@ -7,101 +7,59 @@
 #include <fstream>
 #include <vector>
 #include <time.h>
-#include "mpi.h"
+#include <math.h>
 using namespace std;
 
-class XX{
-public:
-    XX(){}
-    XX(int xx):x(xx){}
-    int x;
-};
-class YY{
-public:
-    YY(){}
-    YY(int yy):y(yy){}
-    int y;
-};
-class gradient{
-public:
-    gradient(){}
-    gradient(int gg):g(gg){}
-    int g;
-};
-class FullGradient{
-public:
-    FullGradient(){}
-    FullGradient(int ffgg):fg(ffgg){}
-    int fg;
-};
-
-
-int main(){
+int main()
+{
+    int x, y, old_y, gradient;
+    int theta = 15;
     
-    clock_t begin_time = clock();
+    //Arrays of distances for each probe
+    int Probe1[100]; //highest probe
+    int Probe2[100];
+    int Probe3[100];
+    int Probe4[100];
+    int Probe5[100];
+    int Probe6[100];
+    int Probe7[100];
+    int Probe8[100]; //lowest probe
     
-    ifstream fin;
-    fin.open("DataRun1.txt", ios::in);
     
-    int d; //distance
-    int x, y;
-    char symbol=',';
-    vector<XX> x_vec;
-    vector<YY> y_vec;
-    vector<gradient> g_vec;
-    int g, j, numNodes, rank;
-    
-    MPI::Init();
-    numNodes = MPI::COMM_WORLD.Get_size();
-    rank= MPI::COMM_WORLD.Get_rank();
-    
-    if (rank!=0){
-        while (!fin.eof()){
-            fin>>d>>symbol;
-            //remember that d is stored as distance_in_cm*1,000,000 + time_in_ms*1000 + probe_ID
-            int d = d/1000000; //force integer division to get d back 
-            
-            x = d * 0.76;
-            x = x*1000000 + time_in_ms*1000 + probe_ID; //don't forget to keep track of the other data
-            x_vec.push_back(x);
-            y = d * 0.65;
-            y = y*1000000 + time_in_ms*1000 + probe_ID;
-            y_vec.push_back(y);
-            
+    for (int data = 1; data <= 100; data++){
+    //take the distance and calculate the x distance
+    //x distance will tell you where to begin drawing horizontal line
+        x = Probe1[data]*cos(theta);
+    //calculate y and gradient
+    //y will decide the gradient for the line
+        y = Probe1[data]*sin(theta);
+        if ((y - old_y)>0){
+            if ( (255*(y-old_y)/old_y) > (255-255*(y-old_y)/old_y) )
+                gradient = 255*(y-old_y)/old_y; 
+            else if ( (255*(y-old_y)/old_y) < (255-255*(y-old_y)/old_y) )
+                gradient = 255-255*(y-old_y)/old_y;
         }
-        //each node finds gradient for its set of x/y values
-        for (int i=(rank-1)*x_vec.size()/numNodes+5; i<x_vec.size()/numNodes; i++){
-            j = i-5;
-            z = 1/1000000; 
-            g = (x_vec[i-5]*z + x_vec[i-4]*z + x_vec[i-3]*z + x_vec[i-2]*z + x_vec[i-1]*z + x_vec[i]*z)/5 - 
-                (y_vec[i-5]*z + y_vec[i-4]*z + y_vec[i-3]*z + y_vec[i-2]*z + y_vec[i-1]*z + y_vec[i]*z)/5;
-            g *= -255;
-            g = (g+225)/1; //force integer division
-            g_vec[j] = g*1000000 + time_in_ms*1000 + probe_ID; //adds back the time and height to the gradient value 
+        else if ((y - old_y)<0){
+            if ((255*(old_y-y)/old_y)<(255-255*(old_y-y)/old_y))
+                gradient = 255*(y-old_y)/old_y;
+            else if ((255*(old_y-y)/old_y)>(255-255*(old_y-y)/old_y))
+                gradient = 255-255*(y-old_y)/old_y;
+        }
         
-        }
-        //each processor sends vector of gradients to head node
-        MPI_Send(g_vec, x_vec.size(), MPI_INT, 0, rank, MPI_COMM_WORLD);
+
+    //draw the line starting at x with gradient g(y)
+    //top left corner of drawing is (0,0) - will draw 1/2 of face which will be duplicated and flipped, assumes symmetry until I can control noise when probes are used on both sides
+    //probe 1 will draw horizontal line at y = 5
+    //probe 2, y = 10 and so on - for the initial test
+    
     }
     
-
-    if (rank==0){
-        //gather data
-        for (int ii=1; i<size; i++){
-          MPI_Recv(g_Vec, x_vec.size(), MPI_INT, i, i, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-          FullGradient.pushback(g_Vec);
-        }
-        //we don't need to worry about the order within this vector
-        //because part of each value holds the probe height and the time
-
-
-    }
     
-    MPI_Finalize();
     
- 
     return 0;
 }
+
+
 
 
 
