@@ -3,6 +3,13 @@
 //For after you've gotten you distance data stored as (distance_in_cm*1,000,000 + time_in_ms*1,000 + probe_ID)
 //This collapse all needed data into a single number to fit into a 1D array - supercomputers like 1D arrays
 
+//This code uses each x to find the starting point to draw the horizontal line of the face corresponding to that probe, 
+//while the y is used to calculate the gradient of that line
+
+//The face is drawn line by line. For example, the horizontal line across the nose is drawn first starting at the 
+//largest x as a white line, then more lines drawn starting slightly to the left of the line with a hgiher gradient
+//to form the nose and so on.
+
 #include <iostream>
 #include <fstream>
 #include <vector>
